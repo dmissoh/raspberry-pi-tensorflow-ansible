@@ -1,0 +1,13 @@
+##
+# Ansible playbook for setting up a development on Ubuntu 16.04.
+#
+---
+
+- hosts: raspberry
+  vars_files:
+    - group_vars/all.yml
+
+  roles:
+    - { role: common, become: yes, become_method: sudo, tags: common }
+    - { role: deep_learning,   become: yes, become_method: sudo, tags: deep_learning }
+

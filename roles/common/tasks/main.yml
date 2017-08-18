@@ -1,0 +1,56 @@
+---
+
+- name: common | Create directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+  with_items:
+    - '{{ user_local_dir }}'
+    - '{{ soft_dir }}'
+  become: yes
+  become_method: sudo
+
+- name: Package | Install lists packages
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+  with_items:
+    - aptitude
+    - build-essential
+    - mesa-common-dev
+    - libglu1-mesa-dev
+    - bash-completion
+    - openssh-server
+    - vim
+    - git
+    - git-core
+    - git-extras
+    - curl
+    - wget
+    - htop
+    - ack-grep
+    - ccze
+    - tmux
+    - tig
+    - unzip
+    - tar
+    - gzip
+    - bzip2
+    - pwgen
+    - fish
+
+- block:
+  - name: Package | Install lists packages
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - fish
+
+  - name: common | Let's use Fish Shell
+    user:
+      name: "{{ ansible_user }}"
+      shell: /usr/bin/fish
+    become: yes
+    become_method: sudo

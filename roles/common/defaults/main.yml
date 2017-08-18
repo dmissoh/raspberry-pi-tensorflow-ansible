@@ -1,0 +1,8 @@
+---
+
+bin_dir:         "/home/{{ ansible_user }}/bin"
+user_local_dir:  "/opt"
+local_bin_dir:   "{{ user_local_dir }}/bin"
+soft_dir:        "/home/{{ ansible_user }}/software"
+tensorflow_dir:  "/home/{{ ansible_user }}/tensorflow"
+tensorflow_files_dir: "{{tensorflow_dir }}/tf_files"

@@ -1,0 +1,46 @@
+---
+
+- name: deeplearning | Create directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+  with_items:
+    - '{{ tensorflow_dir }}'
+    - '{{ tensorflow_files_dir }}'
+  become: yes
+  become_method: sudo
+
+- name: deeplearning | Install lists packages
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+  with_items:
+    - python-pip
+    - python-dev
+    - fswebcam
+
+- name: deeplearning | Copy retrain.py script
+  copy:
+    src: "retrain.py"
+    dest: "{{ tensorflow_dir }}/retrain.py"
+
+- name: deeplearning | Copy training set
+  copy:
+    src: "lego-pictures.tar.gz"
+    dest: "{{ tensorflow_files_dir }}/lego-pictures.tar.gz"
+
+- name: deeplearning | Unarchive training set
+  unarchive:
+    src: "{{ tensorflow_files_dir }}/lego-pictures.tar.gz"
+    dest: "{{ tensorflow_files_dir }}"
+    remote_src: True
+
+- name: deeplearning | Make the directory tree readable
+  file:
+    path: "{{ tensorflow_files_dir }}/lego-pictures"
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+
+- include: tensorflow.yml
+  tags: tensorflow
